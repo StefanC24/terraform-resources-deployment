@@ -9,9 +9,12 @@ on:
         default: 'storage'
         type: choice
         options:
-        - storage
-        - kv
-        - az_databricks
+        - storage account
+        - cosmos db
+        - azure databricks
+        - event grid domain
+        - function app
+        - data factory
       action:
         description: 'Select the action to perform'
         required: true
@@ -64,20 +67,20 @@ jobs:
         fi
       working-directory: ${{ github.workspace }}
 
-    - name: Deploy Key Vault
-      if: github.event.inputs.resource_type == 'kv'
+    - name: Deploy Cosmos DB
+      if: github.event.inputs.resource_type == 'cosmos db'
       env:
         TF_VAR_client_id: ${{ secrets.CLIENT_ID }}
         TF_VAR_client_secret: ${{ secrets.CLIENT_SECRET }}
         TF_VAR_tenant_id: ${{ secrets.TENANT_ID }}
         TF_VAR_subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
       run: |
-        terraform plan -target=azurerm_key_vault.key_vault -target=azurerm_resource_group.resource_group -out=tfplan
+        terraform plan -target=azurerm_cosmosdb_account.db -target=azurerm_resource_group.resource_group -out=tfplan
         terraform apply tfplan
       working-directory: ${{ github.workspace }}
 
     - name: Deploy Azure Databricks
-      if: github.event.inputs.resource_type == 'az_databricks'
+      if: github.event.inputs.resource_type == 'azure databricks'
       env:
         TF_VAR_client_id: ${{ secrets.CLIENT_ID }}
         TF_VAR_client_secret: ${{ secrets.CLIENT_SECRET }}
@@ -85,6 +88,42 @@ jobs:
         TF_VAR_subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
       run: |
         terraform plan -target=azurerm_databricks_workspace.databricks -target=azurerm_resource_group.resource_group -out=tfplan
+        terraform apply tfplan
+      working-directory: ${{ github.workspace }}
+
+    - name: Deploy Event Grid Domain
+      if: github.event.inputs.resource_type == 'event grid domain'
+      env:
+        TF_VAR_client_id: ${{ secrets.CLIENT_ID }}
+        TF_VAR_client_secret: ${{ secrets.CLIENT_SECRET }}
+        TF_VAR_tenant_id: ${{ secrets.TENANT_ID }}
+        TF_VAR_subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
+      run: |
+        terraform plan -target=azurerm_eventgrid_domain.example -target=azurerm_resource_group.resource_group -out=tfplan
+        terraform apply tfplan
+      working-directory: ${{ github.workspace }}
+
+    - name: Deploy Function App
+      if: github.event.inputs.resource_type == 'function app'
+      env:
+        TF_VAR_client_id: ${{ secrets.CLIENT_ID }}
+        TF_VAR_client_secret: ${{ secrets.CLIENT_SECRET }}
+        TF_VAR_tenant_id: ${{ secrets.TENANT_ID }}
+        TF_VAR_subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
+      run: |
+        terraform plan -target=azurerm_function_app.function_app -target=azurerm_resource_group.resource_group -out=tfplan
+        terraform apply tfplan
+      working-directory: ${{ github.workspace }}
+
+    - name: Deploy Data Factory
+      if: github.event.inputs.resource_type == 'data factory'
+      env:
+        TF_VAR_client_id: ${{ secrets.CLIENT_ID }}
+        TF_VAR_client_secret: ${{ secrets.CLIENT_SECRET }}
+        TF_VAR_tenant_id: ${{ secrets.TENANT_ID }}
+        TF_VAR_subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
+      run: |
+        terraform plan -target=azurerm_data_factory.data_factory -target=azurerm_resource_group.resource_group -out=tfplan
         terraform apply tfplan
       working-directory: ${{ github.workspace }}
 

@@ -5,19 +5,13 @@ resource "azurerm_resource_group" "resource_group" {
 }
 
 resource "azurerm_storage_account" "storage" {
-    name                     = "storageaccount${random_string.storage_name.result}"
+    name                     = "itcstorageaccountsa"
     resource_group_name      = azurerm_resource_group.resource_group.name
     location                 = azurerm_resource_group.resource_group.location
     account_tier             = "Standard"
     account_replication_type = "LRS"
 
     tags = {
-        environment = "production"
+        environment = "development"
     }
-}
-
-resource "random_string" "storage_name" {
-    length  = 8
-    special = false
-    upper   = false
 }
