@@ -1,0 +1,78 @@
+name: Deploy Cloud Resources
+
+on:
+  workflow_dispatch:
+    inputs:
+      resource_type:
+        description: 'Select the resource to deploy'
+        required: true
+        default: 'storage'
+        type: choice
+        options:
+        - storage
+        - kv
+        - az_databricks
+      action:
+        description: 'Select the action to perform'
+        required: true
+        default: 'plan'
+        type: choice
+        options:
+        - plan
+        - apply
+        - destroy
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: latest
+
+    - name: Terraform Init
+      env:
+        TF_VAR_client_id: ${{ secrets.CLIENT_ID }}
+        TF_VAR_client_secret: ${{ secrets.CLIENT_SECRET }}
+        TF_VAR_tenant_id: ${{ secrets.TENANT_ID }}
+        TF_VAR_subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
+      run: terraform init
+      working-directory: ${{ github.workspace }}
+
+    - name: Deploy Storage Account
+      if: github.event.inputs.resource_type == 'storage'
+      run: |
+        if [ "${{ github.event.inputs.action }}" == "plan" ]; then
+          terraform plan -target=azurerm_storage_account.storage -target=azurerm_resource_group.resource_group
+        elif [ "${{ github.event.inputs.action }}" == "apply" ]; then
+          terraform apply -auto-approve -target=azurerm_storage_account.storage -target=azurerm_resource_group.resource_group
+        elif [ "${{ github.event.inputs.action }}" == "destroy" ]; then
+          terraform destroy -auto-approve -target=azurerm_storage_account.storage -target=azurerm_resource_group.resource_group
+        fi
+      working-directory: ${{ github.workspace }}
+
+    - name: Deploy Key Vault
+      if: github.event.inputs.resource_type == 'kv'
+      run: |
+        terraform plan -target=azurerm_key_vault.key_vault -target=azurerm_resource_group.resource_group -out=tfplan
+        terraform apply tfplan
+      working-directory: ${{ github.workspace }}
+
+    - name: Deploy Azure Databricks
+      if: github.event.inputs.resource_type == 'az_databricks'
+      run: |
+        terraform plan -target=azurerm_databricks_workspace.databricks -target=azurerm_resource_group.resource_group -out=tfplan
+        terraform apply tfplan
+      working-directory: ${{ github.workspace }}
+
+    - name: Output Deployment Summary
+      run: |
+        echo "Successfully deployed resource: ${{ github.event.inputs.resource_type }}"
