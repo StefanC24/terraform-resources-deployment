@@ -47,6 +47,10 @@ jobs:
         TF_VAR_client_secret: ${{ secrets.CLIENT_SECRET }}
         TF_VAR_tenant_id: ${{ secrets.TENANT_ID }}
         TF_VAR_subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
+        ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
+        ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+        ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
+        ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
       run: terraform init
       working-directory: ${{ github.workspace }}
 
@@ -74,6 +78,10 @@ jobs:
         TF_VAR_client_secret: ${{ secrets.CLIENT_SECRET }}
         TF_VAR_tenant_id: ${{ secrets.TENANT_ID }}
         TF_VAR_subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
+        ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
+        ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+        ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
+        ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
       run: |
         terraform plan -target=azurerm_cosmosdb_account.db -target=azurerm_resource_group.resource_group -out=tfplan
         terraform apply tfplan
@@ -86,6 +94,10 @@ jobs:
         TF_VAR_client_secret: ${{ secrets.CLIENT_SECRET }}
         TF_VAR_tenant_id: ${{ secrets.TENANT_ID }}
         TF_VAR_subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
+        ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
+        ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+        ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
+        ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
       run: |
         terraform plan -target=azurerm_databricks_workspace.databricks -target=azurerm_resource_group.resource_group -out=tfplan
         terraform apply tfplan
@@ -98,6 +110,10 @@ jobs:
         TF_VAR_client_secret: ${{ secrets.CLIENT_SECRET }}
         TF_VAR_tenant_id: ${{ secrets.TENANT_ID }}
         TF_VAR_subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
+        ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
+        ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+        ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
+        ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
       run: |
         terraform plan -target=azurerm_eventgrid_domain.example -target=azurerm_resource_group.resource_group -out=tfplan
         terraform apply tfplan
@@ -110,6 +126,10 @@ jobs:
         TF_VAR_client_secret: ${{ secrets.CLIENT_SECRET }}
         TF_VAR_tenant_id: ${{ secrets.TENANT_ID }}
         TF_VAR_subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
+        ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
+        ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+        ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
+        ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
       run: |
         terraform plan -target=azurerm_function_app.function_app -target=azurerm_resource_group.resource_group -out=tfplan
         terraform apply tfplan
@@ -122,6 +142,10 @@ jobs:
         TF_VAR_client_secret: ${{ secrets.CLIENT_SECRET }}
         TF_VAR_tenant_id: ${{ secrets.TENANT_ID }}
         TF_VAR_subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
+        ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
+        ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+        ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
+        ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
       run: |
         terraform plan -target=azurerm_data_factory.data_factory -target=azurerm_resource_group.resource_group -out=tfplan
         terraform apply tfplan
