@@ -87,8 +87,13 @@ jobs:
         ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
         ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
       run: |
-        terraform plan -target=azurerm_cosmosdb_account.db -target=azurerm_resource_group.resource_group -out=tfplan
-        terraform apply tfplan
+        if [ "${{ github.event.inputs.action }}" == "plan" ]; then
+          terraform plan -target=azurerm_cosmosdb_account.db -target=azurerm_resource_group.cosmos_resource_group
+        elif [ "${{ github.event.inputs.action }}" == "apply" ]; then
+          terraform apply -auto-approve -target=azurerm_cosmosdb_account.db -target=azurerm_resource_group.cosmos_resource_group
+        elif [ "${{ github.event.inputs.action }}" == "destroy" ]; then
+          terraform destroy -auto-approve -target=azurerm_cosmosdb_account.db -target=azurerm_resource_group.cosmos_resource_group
+        fi
       working-directory: ${{ github.workspace }}
 
     - name: Deploy Azure Databricks
@@ -103,8 +108,13 @@ jobs:
         ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
         ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
       run: |
-        terraform plan -target=azurerm_databricks_workspace.databricks -target=azurerm_resource_group.resource_group -out=tfplan
-        terraform apply tfplan
+        if [ "${{ github.event.inputs.action }}" == "plan" ]; then
+          terraform plan -target=azurerm_databricks_workspace.databricks -target=azurerm_resource_group.databricks_resource_group
+        elif [ "${{ github.event.inputs.action }}" == "apply" ]; then
+          terraform apply -auto-approve -target=azurerm_databricks_workspace.databricks -target=azurerm_resource_group.databricks_resource_group
+        elif [ "${{ github.event.inputs.action }}" == "destroy" ]; then
+          terraform destroy -auto-approve -target=azurerm_databricks_workspace.databricks -target=azurerm_resource_group.databricks_resource_group
+        fi
       working-directory: ${{ github.workspace }}
 
     - name: Deploy Event Grid Domain
@@ -119,8 +129,13 @@ jobs:
         ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
         ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
       run: |
-        terraform plan -target=azurerm_eventgrid_domain.example -target=azurerm_resource_group.resource_group -out=tfplan
-        terraform apply tfplan
+        if [ "${{ github.event.inputs.action }}" == "plan" ]; then
+          terraform plan -target=azurerm_eventgrid_domain.example -target=azurerm_resource_group.eventgrid_resource_group
+        elif [ "${{ github.event.inputs.action }}" == "apply" ]; then
+          terraform apply -auto-approve -target=azurerm_eventgrid_domain.example -target=azurerm_resource_group.eventgrid_resource_group
+        elif [ "${{ github.event.inputs.action }}" == "destroy" ]; then
+          terraform destroy -auto-approve -target=azurerm_eventgrid_domain.example -target=azurerm_resource_group.eventgrid_resource_group
+        fi
       working-directory: ${{ github.workspace }}
 
     - name: Deploy Function App
@@ -135,8 +150,13 @@ jobs:
         ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
         ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
       run: |
-        terraform plan -target=azurerm_function_app.function_app -target=azurerm_resource_group.resource_group -out=tfplan
-        terraform apply tfplan
+        if [ "${{ github.event.inputs.action }}" == "plan" ]; then
+            terraform plan -target=azurerm_function_app.function_app -target=azurerm_resource_group.fapp_resource_group
+        elif [ "${{ github.event.inputs.action }}" == "apply" ]; then
+          terraform apply -auto-approve -target=azurerm_function_app.function_app -target=azurerm_resource_group.fapp_resource_group
+        elif [ "${{ github.event.inputs.action }}" == "destroy" ]; then
+          terraform destroy -auto-approve -target=azurerm_function_app.function_app -target=azurerm_resource_group.fapp_resource_group
+        fi
       working-directory: ${{ github.workspace }}
 
     - name: Deploy Data Factory
@@ -151,8 +171,13 @@ jobs:
         ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
         ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
       run: |
-        terraform plan -target=azurerm_data_factory.data_factory -target=azurerm_resource_group.resource_group -out=tfplan
-        terraform apply tfplan
+        if [ "${{ github.event.inputs.action }}" == "plan" ]; then
+          terraform plan -target=azurerm_data_factory.data_factory -target=azurerm_resource_group.datafactory_resource_group
+        elif [ "${{ github.event.inputs.action }}" == "apply" ]; then
+          terraform apply -auto-approve -target=azurerm_data_factory.data_factory -target=azurerm_resource_group.datafactory_resource_group
+        elif [ "${{ github.event.inputs.action }}" == "destroy" ]; then
+          terraform destroy -auto-approve -target=azurerm_data_factory.data_factory -target=azurerm_resource_group.datafactory_resource_group
+        fi
       working-directory: ${{ github.workspace }}
 
     - name: Output Deployment Summary
