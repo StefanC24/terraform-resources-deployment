@@ -3,10 +3,16 @@ resource "random_integer" "ri" {
   max = 99999
 }
 
+resource "azurerm_resource_group" "cosmos_resource_group" {
+    name     = "cosmos_resource_group"
+    location = "East US"
+  
+}
+
 resource "azurerm_cosmosdb_account" "db" {
   name                = "tfex-cosmos-db-${random_integer.ri.result}"
-  location            = azurerm_resource_group.resource_group.location
-  resource_group_name = azurerm_resource_group.resource_group.name
+  location            = azurerm_resource_group.cosmos_resource_group.location
+  resource_group_name = azurerm_resource_group.cosmos_resource_group.name
   offer_type          = "Standard"
   kind                = "MongoDB"
 
