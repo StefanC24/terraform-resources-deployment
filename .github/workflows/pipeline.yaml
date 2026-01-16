@@ -51,7 +51,7 @@ jobs:
       working-directory: ${{ github.workspace }}
 
     - name: Deploy Storage Account
-      if: github.event.inputs.resource_type == 'storage'
+      if: github.event.inputs.resource_type == 'storage account'
       env:
         TF_VAR_client_id: ${{ secrets.CLIENT_ID }}
         TF_VAR_client_secret: ${{ secrets.CLIENT_SECRET }}
